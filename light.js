@@ -51,6 +51,11 @@ function connect() {
 function turnOn() {
   console.log('Turn On');
 
+  if (!isConnected()) {
+    console.error('Error: not connected');
+    return;
+  }
+
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
 
@@ -69,6 +74,11 @@ function turnOn() {
 
 function turnOff() {
   console.log('Turn Off');
+
+  if (!isConnected()) {
+    console.error('Error: not connected');
+    return;
+  }
 
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
