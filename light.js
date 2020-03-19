@@ -46,7 +46,7 @@ function turnOn() {
         device.set({ multiple: true, data: { [DPS.Toggle]: true, [DPS.Brightness]: 0, [DPS.Temperature]: 0 } });
 
         // Set up light fading state
-        reset();
+        resetState();
 
         // Start fade in update loop
         update(resolve);
@@ -74,7 +74,25 @@ function turnOff() {
   });
 }
 
-function reset() {
+function getStatus() {
+  state.busy = true;
+
+  return new Promise((resolve, reject) => {
+    // Find device on network
+    device.find().then(() => {
+      // Connect to device
+      device.connect().then(() => {
+        device.get().then(status => {
+          device.disconnect();
+          state.busy = false;
+          resolve(status);
+        });
+      });
+    });
+  });
+}
+
+function resetState() {
   // First cycle = 0
   state.time = -settings.get('interval');
   state.last = -1;
@@ -115,4 +133,5 @@ module.exports = {
   turnOn,
   turnOff,
   getState,
+  getStatus,
 };

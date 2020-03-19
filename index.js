@@ -3,7 +3,7 @@ const express = require('express');
 // Env vars!
 require('dotenv').config();
 
-const { turnOn, turnOff, getState } = require('./light');
+const { turnOn, turnOff, getState, getStatus } = require('./light');
 const { settings } = require('./settings');
 
 const app = express();
@@ -32,4 +32,8 @@ app.post('/lights_off', (req, res) => {
   } else {
     res.sendStatus(403);
   }
+});
+
+app.get('/status', (req, res) => {
+  getStatus().then(status => res.send(status));
 });
