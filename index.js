@@ -46,5 +46,7 @@ app.get('/settings', (req, res) => {
 });
 
 app.post('/settings', (req, res) => {
-  res.send(settings.JSON(req.body));
+  settings.JSON(req.body);
+  settings.sync();
+  res.sendStatus(200);
 });
