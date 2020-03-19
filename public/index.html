@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sunrise</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="root">
+      <h1>Sunrise</h1>
+
+      <button type="button" class="toggle">
+        <!-- From feathericons.com -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-power"
+        >
+          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+      </button>
+
+      <div class="flex">
+        <label class="marginRight" for="time">Time</label>
+        <input type="time" id="time" />
+      </div>
+
+      <div class="flex">
+        <label class="marginRight" for="time">Duration</label>
+        <input type="number" id="time" min="5" max="60" />
+      </div>
+
+      <div class="flex days">
+        <div class="flex day">
+          <label for="sun">S</label>
+          <input type="checkbox" id="sun" />
+        </div>
+        <div class="flex day">
+          <label for="mon">M</label>
+          <input type="checkbox" id="mon" />
+        </div>
+        <div class="flex day">
+          <label for="tue">T</label>
+          <input type="checkbox" id="tue" />
+        </div>
+        <div class="flex day">
+          <label for="wed">W</label>
+          <input type="checkbox" id="wed" />
+        </div>
+        <div class="flex day">
+          <label for="thu">T</label>
+          <input type="checkbox" id="thu" />
+        </div>
+        <div class="flex day">
+          <label for="fri">F</label>
+          <input type="checkbox" id="fri" />
+        </div>
+        <div class="flex day">
+          <label for="sat">S</label>
+          <input type="checkbox" id="sat" />
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

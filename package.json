@@ -1,0 +1,23 @@
+{
+  "name": "light",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bezier-easing": "^2.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "simple-json-db": "^1.2.2",
+    "tuyapi": "^5.2.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data.json"
+    ]
+  }
+}

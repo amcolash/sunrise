@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  background: rgb(204, 135, 70);
+  color: white;
+  text-shadow: 0.1rem 0.1rem 0.1rem black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5em;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.root {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.flex {
+  display: flex;
+}
+
+.marginRight {
+  margin-right: 1rem;
+}
+
+h1 {
+  margin: 0;
+}
+
+button {
+  color: white;
+}
+
+.toggle {
+  width: 5rem;
+  height: 5rem;
+  background: none;
+  border: none;
+}
+
+.days {
+  width: 80vw;
+  max-width: 25rem;
+  justify-content: space-between;
+}
+
+.days .day {
+  /* padding: 1.5rem; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.days .day label {
+  margin-bottom: 0.5rem;
+}
+
+.days .day input {
+  transform: scale(1.5);
+}
