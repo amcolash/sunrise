@@ -1,31 +1,50 @@
+const cors = require('cors');
 const express = require('express');
 
 // Env vars!
 require('dotenv').config();
 
-const { turnOn, turnOff, getStatus } = require('./light');
+const { turnOn, turnOff, getStatus, isConnected } = require('./light');
 const { settings } = require('./settings');
 
 const app = express();
 app.use('/', express.static('public'));
 app.use(express.json());
+app.use(cors());
 
-const port = 3000;
+const port = process.env.PORT || 8001;
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Server listening on port ${port}`));
+
+// Middleware to intercept all requests and deny if not connected to device
+app.use((req, res, next) => {
+  if (!isConnected()) {
+    res.status(403);
+    res.send('No connection to device!');
+    return;
+  }
+
+  next();
+});
 
 app.post('/lights_on', (req, res) => {
-  console.log('Lights On');
   turnOn();
   res.sendStatus(200);
 });
 
 app.post('/lights_off', (req, res) => {
-  console.log('Lights Off');
   turnOff();
   res.sendStatus(200);
 });
 
 app.get('/status', (req, res) => {
   getStatus().then(status => res.send(status));
+});
+
+app.get('/settings', (req, res) => {
+  res.send(settings.JSON());
+});
+
+app.post('/settings', (req, res) => {
+  res.send(settings.JSON(req.body));
 });

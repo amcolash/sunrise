@@ -33,11 +33,8 @@ h1 {
   margin: 0;
 }
 
-button {
+#toggle {
   color: white;
-}
-
-.toggle {
   width: 5rem;
   height: 5rem;
   background: none;

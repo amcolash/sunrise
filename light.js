@@ -30,7 +30,7 @@ device.on('connected', () => {
 });
 
 device.on('disconnected', () => {
-  console.log('Disconnected from device.');
+  console.log('Disconnected from device.\nRetrying connection...');
 
   // Retry connection when failed
   setTimeout(() => connect(), 3000);
@@ -49,6 +49,8 @@ function connect() {
 }
 
 function turnOn() {
+  console.log('Turn On');
+
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
 
@@ -66,6 +68,8 @@ function turnOn() {
 }
 
 function turnOff() {
+  console.log('Turn Off');
+
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
 
@@ -74,7 +78,11 @@ function turnOff() {
 }
 
 function getStatus() {
-  return device.get();
+  return device.get({ schema: true });
+}
+
+function isConnected() {
+  return device.isConnected();
 }
 
 function resetState() {
@@ -112,4 +120,5 @@ module.exports = {
   turnOn,
   turnOff,
   getStatus,
+  isConnected,
 };
