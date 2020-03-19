@@ -12,13 +12,15 @@ const DPS = {
 const state = {
   time: -1,
   last: -1,
-  busy: false,
 };
 
 const device = new TuyAPI({
   id: process.env.BULB_ID,
   key: process.env.BULB_KEY,
 });
+
+// Singular global connection
+connect();
 
 // Add event listeners
 device.on('connected', () => {
@@ -27,69 +29,50 @@ device.on('connected', () => {
 
 device.on('disconnected', () => {
   console.log('Disconnected from device.');
+
+  // Retry connection when failed
+  setTimeout(() => connect(), 3000);
 });
 
 device.on('error', error => {
   console.log('Error!', error);
 });
 
-function turnOn() {
-  state.busy = true;
+function connect() {
+  // Find device on network
+  device.find().then(() => {
+    // Connect to device
+    device.connect();
+  });
+}
 
+function turnOn() {
   // Promise here since promises not working with set :(
   return new Promise((resolve, reject) => {
-    // Find device on network
-    device.find().then(() => {
-      // Connect to device
-      device.connect().then(() => {
-        // Set light to be on, 0% brightness, warm as possible. Promises do not seem to be working here :(
-        device.set({ multiple: true, data: { [DPS.Toggle]: true, [DPS.Brightness]: 0, [DPS.Temperature]: 0 } });
+    // Set light to be on, 0% brightness, warm as possible. Promises do not seem to be working here :(
+    device.set({ multiple: true, data: { [DPS.Toggle]: true, [DPS.Brightness]: 0, [DPS.Temperature]: 0 } });
 
-        // Set up light fading state
-        resetState();
+    // Set up light fading state
+    resetState();
 
-        // Start fade in update loop
-        update(resolve);
-      });
-    });
+    // Start fade in update loop
+    update(resolve);
   });
 }
 
 function turnOff() {
-  state.busy = true;
+  // Turn off light
+  device.set({ dps: [DPS.Brightness], set: 0 });
 
-  // Find device on network
-  device.find().then(() => {
-    // Connect to device
-    device.connect().then(() => {
-      // Turn off light
-      device.set({ dps: [DPS.Brightness], set: 0 });
-
-      // Wait a moment, then disconnect
-      setTimeout(() => {
-        device.disconnect();
-        state.busy = false;
-      }, 2000);
-    });
-  });
+  // Wait a moment, then disconnect
+  setTimeout(() => {
+    device.disconnect();
+    state.busy = false;
+  }, 2000);
 }
 
 function getStatus() {
-  state.busy = true;
-
-  return new Promise((resolve, reject) => {
-    // Find device on network
-    device.find().then(() => {
-      // Connect to device
-      device.connect().then(() => {
-        device.get().then(status => {
-          device.disconnect();
-          state.busy = false;
-          resolve(status);
-        });
-      });
-    });
-  });
+  return device.get();
 }
 
 function resetState() {
@@ -118,9 +101,7 @@ function update(resolve) {
 
       update(resolve);
     } else {
-      device.disconnect();
-      state.busy = false;
-      setTimeout(() => resolve(), 2000);
+      resolve();
     }
   }, settings.get('interval'));
 }
