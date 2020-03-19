@@ -23,8 +23,12 @@ function getCronTime() {
   });
 
   const splitTime = settings.get('time').split(':');
-  const hour = splitTime[0];
-  const min = splitTime[1];
+  const hour = splitTime[0] || 8;
+  const min = splitTime[1] || 30;
+
+  if (splitTime.length < 2) {
+    console.error('Broken time, using defaults', splitTime, settings.get('time'));
+  }
 
   const cron = `0 ${min} ${hour} * * ${days}`;
   // console.log('CronTime', cron);
