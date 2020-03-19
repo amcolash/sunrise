@@ -60,5 +60,8 @@ app.post('/settings', (req, res) => {
   cron.setTime(new CronTime(getCronTime()));
   cron.start();
 
+  // Cancel anything that may have been running
+  turnOff();
+
   res.sendStatus(200);
 });

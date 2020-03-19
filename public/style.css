@@ -2,7 +2,7 @@ body {
   margin: 0;
   background: rgb(204, 135, 70);
   color: white;
-  text-shadow: 0.1rem 0.1rem 0.1rem black;
+  text-shadow: 0.1rem 0.1rem 0.2rem black;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5em;
   overflow: hidden;
@@ -29,6 +29,10 @@ body {
   margin-right: 1rem;
 }
 
+input {
+  padding: 0.3rem;
+}
+
 h1 {
   margin: 0;
 }
@@ -39,6 +43,8 @@ h1 {
   height: 5rem;
   background: none;
   border: none;
+  filter: drop-shadow(0.1rem 0.1rem 0.15rem black);
+  cursor: pointer;
 }
 
 .days {
@@ -54,7 +60,7 @@ h1 {
 }
 
 .days .day label {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .days .day input {
