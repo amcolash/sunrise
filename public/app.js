@@ -22,7 +22,7 @@ function updateUI() {
   time.value = settings.time;
 
   // Clamp duration to acceptable value
-  duration.value = Math.max(settings.duration / 1000 / 60, 5);
+  duration.value = Math.max(settings.duration / 60 / 1000, 5);
 
   checkboxes.forEach((c, i) => {
     c.checked = settings.days[i];
@@ -38,7 +38,7 @@ function getSettings() {
   return {
     ...settings,
     time: time.value,
-    duration: duration.value,
+    duration: Number.parseInt(duration.value) * 60 * 1000,
     days,
   };
 }

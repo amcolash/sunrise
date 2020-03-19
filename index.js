@@ -1,11 +1,12 @@
 const cors = require('cors');
+const { CronJob } = require('cron');
 const express = require('express');
 
 // Env vars!
 require('dotenv').config();
 
 const { turnOn, turnOff, getStatus, isConnected } = require('./light');
-const { settings } = require('./settings');
+const { getCronTime, settings } = require('./settings');
 
 const app = express();
 app.use('/', express.static('public'));
@@ -13,8 +14,9 @@ app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT || 8001;
-
 app.listen(port, () => console.log(`Server listening on port ${port}`));
+
+const job = new CronJob(getCronTime(), turnOn, null, true, 'America/Los_Angeles');
 
 // Middleware to intercept all requests and deny if not connected to device
 app.use((req, res, next) => {

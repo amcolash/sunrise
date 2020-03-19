@@ -106,7 +106,7 @@ function update(resolve) {
       if (state.last !== value) {
         device.set({ dps: [DPS.Brightness], set: value });
         state.last = value;
-        console.log(value);
+        console.log(value, state.time);
       }
 
       update(resolve);

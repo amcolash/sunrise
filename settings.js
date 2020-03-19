@@ -13,6 +13,25 @@ function initSettings() {
 
 initSettings();
 
+function getCronTime() {
+  let days = '';
+  settings.get('days').forEach((d, i) => {
+    if (d) {
+      if (days.length > 0) days += ',';
+      days += i;
+    }
+  });
+
+  const splitTime = settings.get('time').split(':');
+  const hour = splitTime[0];
+  const min = splitTime[1];
+
+  const cron = `${min} ${hour} * * ${days}`;
+  console.log('CronTime', cron);
+  return cron;
+}
+
 module.exports = {
+  getCronTime,
   settings,
 };
