@@ -1,0 +1,16 @@
+version: '2'
+services:
+  sunrise:
+    image: amcolash/sunrise
+    build: ./
+    container_name: sunrise
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./data.json:/usr/src/app/data.json
+    ports:
+      - 8001:8001
+    network_mode: 'host'
+    entrypoint: node /usr/src/app/index.js
+    env_file:
+      - .env
