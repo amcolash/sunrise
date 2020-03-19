@@ -19,6 +19,8 @@ const device = new TuyAPI({
   key: process.env.BULB_KEY,
 });
 
+let lightOnTimeout;
+
 // Singular global connection
 connect();
 
@@ -47,6 +49,9 @@ function connect() {
 }
 
 function turnOn() {
+  // Clear things if currently turning on
+  clearTimeout(lightOnTimeout);
+
   // Promise here since promises not working with set :(
   return new Promise((resolve, reject) => {
     // Set light to be on, 0% brightness, warm as possible. Promises do not seem to be working here :(
@@ -61,14 +66,11 @@ function turnOn() {
 }
 
 function turnOff() {
-  // Turn off light
-  device.set({ dps: [DPS.Brightness], set: 0 });
+  // Clear things if currently turning on
+  clearTimeout(lightOnTimeout);
 
-  // Wait a moment, then disconnect
-  setTimeout(() => {
-    device.disconnect();
-    state.busy = false;
-  }, 2000);
+  // Turn off light
+  device.set({ multiple: true, data: { [DPS.Toggle]: false, [DPS.Brightness]: 0 } });
 }
 
 function getStatus() {
@@ -85,7 +87,7 @@ function resetState() {
 const easing = BezierEasing(0.63, 0.1, 0.19, 0.31);
 
 function update(resolve) {
-  setTimeout(() => {
+  lightOnTimeout = setTimeout(() => {
     state.time += settings.get('interval');
 
     if (state.time <= settings.get('duration')) {
@@ -106,13 +108,8 @@ function update(resolve) {
   }, settings.get('interval'));
 }
 
-function getState() {
-  return state;
-}
-
 module.exports = {
   turnOn,
   turnOff,
-  getState,
   getStatus,
 };
