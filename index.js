@@ -52,8 +52,13 @@ app.get('/settings', (req, res) => {
 });
 
 app.post('/settings', (req, res) => {
+  // Update and save new settings
   settings.JSON(req.body);
   settings.sync();
+
+  // Update cron job time and restart it
   cron.setTime(new CronTime(getCronTime()));
+  cron.start();
+
   res.sendStatus(200);
 });

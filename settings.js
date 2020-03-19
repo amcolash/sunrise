@@ -26,8 +26,8 @@ function getCronTime() {
   const hour = splitTime[0];
   const min = splitTime[1];
 
-  const cron = `* ${min} ${hour} * * ${days}`;
-  console.log('CronTime', cron);
+  const cron = `0 ${min} ${hour} * * ${days}`;
+  // console.log('CronTime', cron);
   return cron;
 }
 
