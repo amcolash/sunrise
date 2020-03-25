@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT || 8001;
-app.listen(port, () => console.log(`Server listening on port ${port}`));
+app.listen(port, () => console.log(`${new Date().toLocaleString()}: Server listening on port ${port}`));
 
 // Setup main cron job that is generated based off of settings
 const scheduledOn = new CronJob(getCronTime(), turnOn, null, true, 'America/Los_Angeles');

@@ -6,7 +6,6 @@ services:
     container_name: sunrise
     restart: unless-stopped
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./data.json:/usr/src/app/data.json
     ports:
       - 8001:8001
