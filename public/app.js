@@ -56,7 +56,9 @@ function updateSettings() {
 }
 
 function sendSettings() {
-  axios.post(`${ENDPOINT}/settings`, getSettings());
+  const updated = getSettings();
+  console.log(updated);
+  axios.post(`${ENDPOINT}/settings`, updated);
 }
 
 function setIntervalImmediately(func, interval) {

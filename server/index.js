@@ -1,15 +1,18 @@
 const cors = require('cors');
 const { CronJob, CronTime } = require('cron');
 const express = require('express');
+const path = require('path');
+
+const root = path.join(__dirname, '../');
 
 // Env vars!
-require('dotenv').config();
+require('dotenv').config({ path: path.join(root, '.env') });
 
 const { turnOn, turnOff, getStatus, isConnected } = require('./light');
 const { getCronTime, settings } = require('./settings');
 
 const app = express();
-app.use('/', express.static('public'));
+app.use('/', express.static(path.join(root, 'public')));
 app.use(express.json());
 app.use(cors());
 
@@ -17,10 +20,14 @@ const port = process.env.PORT || 8001;
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 // Setup main cron job that is generated based off of settings
-const cron = new CronJob(getCronTime(), turnOn, null, true, 'America/Los_Angeles');
+const scheduledOn = new CronJob(getCronTime(), turnOn, null, true, 'America/Los_Angeles');
 
 // Turn off lights daily at 10:30 am
 const scheduledOff = new CronJob('* 30 10 * * *', turnOff, null, true, 'America/Los_Angeles');
+
+// Start the cron jobs
+scheduledOn.start();
+scheduledOff.start();
 
 // Middleware to intercept all requests and deny if not connected to device
 app.use((req, res, next) => {
@@ -57,8 +64,8 @@ app.post('/settings', (req, res) => {
   settings.sync();
 
   // Update cron job time and restart it
-  cron.setTime(new CronTime(getCronTime()));
-  cron.start();
+  scheduledOn.setTime(new CronTime(getCronTime()));
+  scheduledOn.start();
 
   // Cancel anything that may have been running
   turnOff();

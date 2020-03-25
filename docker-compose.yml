@@ -11,6 +11,6 @@ services:
     ports:
       - 8001:8001
     network_mode: 'host'
-    entrypoint: node /usr/src/app/index.js
+    entrypoint: npm run server
     env_file:
       - .env
