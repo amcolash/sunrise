@@ -8,7 +8,7 @@ const root = path.join(__dirname, '../');
 // Env vars!
 require('dotenv').config({ path: path.join(root, '.env') });
 
-const { turnOn, turnOff, getStatus, isConnected } = require('./light');
+const { toggle, turnOn, turnOff, getStatus, isConnected } = require('./light');
 const { getCronTime, settings } = require('./settings');
 
 const app = express();
@@ -24,10 +24,6 @@ const scheduledOn = new CronJob(getCronTime(), turnOn, null, true, 'America/Los_
 
 // Turn off lights daily at 10:30 am
 const scheduledOff = new CronJob('* 30 10 * * *', turnOff, null, true, 'America/Los_Angeles');
-
-// Start the cron jobs
-scheduledOn.start();
-scheduledOff.start();
 
 // Middleware to intercept all requests and deny if not connected to device
 app.use((req, res, next) => {
@@ -48,6 +44,10 @@ app.post('/lights_on', (req, res) => {
 app.post('/lights_off', (req, res) => {
   turnOff();
   res.sendStatus(200);
+});
+
+app.post('/toggle', (req, res) => {
+  res.send(toggle());
 });
 
 app.get('/status', (req, res) => {

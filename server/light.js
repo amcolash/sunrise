@@ -12,6 +12,7 @@ const DPS = {
 const state = {
   time: -1,
   last: -1,
+  on: undefined,
 };
 
 const device = new TuyAPI({
@@ -27,13 +28,19 @@ connect();
 // Add event listeners
 device.on('connected', () => {
   console.log('Connected to device');
+
+  // Turn things off after connecting
+  if (state.on === undefined)
+    setTimeout(() => {
+      if (device.isConnected()) turnOff();
+    }, 3000);
 });
 
 device.on('disconnected', () => {
   console.log('Disconnected from device.\nRetrying connection...');
 
   // Retry connection when failed
-  setTimeout(() => connect(), 3000);
+  setTimeout(connect, 3000);
 });
 
 device.on('error', error => {
@@ -42,19 +49,29 @@ device.on('error', error => {
 
 function connect() {
   // Find device on network
-  device.find().then(() => {
-    // Connect to device
-    device.connect();
-  });
+  device
+    .find()
+    .then(() => {
+      // Connect to device
+      device.connect();
+    })
+    .catch(err => {
+      console.error(err);
+
+      // Retry connection if it fails
+      setTimeout(connect, 3000);
+    });
 }
 
-function turnOn() {
+function turnOn(duration) {
   console.log('Turn On');
 
   if (!isConnected()) {
     console.error('Error: not connected');
     return;
   }
+
+  state.on = true;
 
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
@@ -68,7 +85,7 @@ function turnOn() {
     resetState();
 
     // Start fade in update loop
-    update(resolve);
+    update(duration || settings.get('duration'), resolve);
   });
 }
 
@@ -80,11 +97,23 @@ function turnOff() {
     return;
   }
 
+  state.on = false;
+
   // Clear things if currently turning on
   clearTimeout(lightOnTimeout);
 
   // Turn off light
   device.set({ multiple: true, data: { [DPS.Toggle]: false, [DPS.Brightness]: 0 } });
+}
+
+function toggle() {
+  if (state.on) {
+    turnOff();
+  } else {
+    turnOn(settings.get('interval') * 2);
+  }
+
+  return state.on;
 }
 
 function getStatus() {
@@ -104,13 +133,13 @@ function resetState() {
 // https://cubic-bezier.com/
 const easing = BezierEasing(0.63, 0.1, 0.19, 0.31);
 
-function update(resolve) {
+function update(duration, resolve) {
   lightOnTimeout = setTimeout(() => {
     state.time += settings.get('interval');
 
-    if (state.time <= settings.get('duration')) {
+    if (state.time <= duration) {
       // Normalize time from 0-1
-      const norm = state.time / settings.get('duration');
+      const norm = state.time / duration;
       const value = Math.floor(easing(norm) * settings.get('max'));
 
       if (state.last !== value) {
@@ -119,7 +148,7 @@ function update(resolve) {
         console.log(value, state.time);
       }
 
-      update(resolve);
+      update(duration, resolve);
     } else {
       resolve();
     }
@@ -127,6 +156,7 @@ function update(resolve) {
 }
 
 module.exports = {
+  toggle,
   turnOn,
   turnOff,
   getStatus,
