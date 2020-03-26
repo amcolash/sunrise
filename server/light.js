@@ -110,7 +110,7 @@ function toggle() {
   if (state.on) {
     turnOff();
   } else {
-    turnOn(settings.get('interval') * 2);
+    turnOn(settings.get('interval'));
   }
 
   return state.on;

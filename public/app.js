@@ -12,7 +12,18 @@ window.onload = function() {
 
   updateSettings();
 
-  toggle.onclick = () => axios.post(`${ENDPOINT}/lights_off`);
+  toggle.onclick = () =>
+    axios.post(`${ENDPOINT}/toggle`).then(res => {
+      toggle.classList.toggle('on', res.data);
+      toggle.classList.toggle('off', !res.data);
+
+      setTimeout(() => {
+        toggle.blur();
+        toggle.classList.remove('on');
+        toggle.classList.remove('off');
+      }, 2000);
+    });
+
   time.onchange = () => sendSettings();
   duration.onchange = () => sendSettings();
   checkboxes.forEach(c => (c.onchange = () => sendSettings()));
