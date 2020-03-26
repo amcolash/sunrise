@@ -37,6 +37,16 @@ h1 {
   margin: 0;
 }
 
+.feather-zap-off {
+  opacity: 0;
+  color: red;
+  width: 1.5em;
+  height: 1.5em;
+  filter: drop-shadow(0.1rem 0.1rem 0.15rem rgba(0, 0, 0, 0.5));
+  margin: -4.5em 0 -1em;
+  transition: all 0.5s;
+}
+
 #toggle {
   color: white;
   width: 5rem;

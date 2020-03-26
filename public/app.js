@@ -4,6 +4,7 @@ const toggle = document.getElementById('toggle');
 const time = document.getElementById('time');
 const duration = document.getElementById('duration');
 const checkboxes = document.querySelectorAll('input[type=checkbox]');
+const connectError = document.querySelector('.feather-zap-off');
 
 let settings;
 
@@ -58,10 +59,12 @@ function updateSettings() {
   axios
     .get(`${ENDPOINT}/settings`)
     .then(res => {
+      connectError.style.opacity = undefined;
       settings = res.data;
       updateUI();
     })
     .catch(() => {
+      connectError.style.opacity = 1;
       setTimeout(updateSettings, 3000);
     });
 }
