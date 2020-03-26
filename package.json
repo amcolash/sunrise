@@ -4,9 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon",
-    "server": "node server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "if [ -f /.dockerenv ]; then node server/index.js; else nodemon; fi"
   },
   "author": "",
   "license": "MIT",

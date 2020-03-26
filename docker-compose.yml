@@ -10,6 +10,6 @@ services:
     ports:
       - 8001:8001
     network_mode: 'host'
-    entrypoint: npm run server
+    entrypoint: npm start
     env_file:
       - .env
