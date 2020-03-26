@@ -59,7 +59,7 @@ function updateSettings() {
   axios
     .get(`${ENDPOINT}/settings`)
     .then(res => {
-      connectError.style.opacity = undefined;
+      connectError.style.opacity = 'unset';
       settings = res.data;
       updateUI();
     })
