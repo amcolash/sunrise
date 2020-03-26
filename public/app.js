@@ -30,15 +30,20 @@ window.onload = function() {
   checkboxes.forEach(c => (c.onchange = () => sendSettings()));
 };
 
-function updateUI() {
-  time.value = settings.time;
+function updateUI(error) {
+  connectError.style.display = error ? 'unset' : '';
+  document.querySelectorAll('.control').forEach(e => (e.style.display = error ? 'none' : ''));
 
-  // Clamp duration to acceptable value
-  duration.value = Math.max(settings.duration / 60 / 1000, 5);
+  if (!error) {
+    time.value = settings.time;
 
-  checkboxes.forEach((c, i) => {
-    c.checked = settings.days[i];
-  });
+    // Clamp duration to acceptable value
+    duration.value = Math.max(settings.duration / 60 / 1000, 5);
+
+    checkboxes.forEach((c, i) => {
+      c.checked = settings.days[i];
+    });
+  }
 }
 
 function getSettings() {
@@ -59,12 +64,11 @@ function updateSettings() {
   axios
     .get(`${ENDPOINT}/settings`)
     .then(res => {
-      connectError.style.opacity = 'unset';
       settings = res.data;
       updateUI();
     })
-    .catch(() => {
-      connectError.style.opacity = 1;
+    .catch(err => {
+      updateUI(err);
       setTimeout(updateSettings, 3000);
     });
 }

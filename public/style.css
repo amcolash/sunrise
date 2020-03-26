@@ -19,6 +19,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  text-align: center;
 }
 
 .flex {
@@ -38,13 +39,12 @@ h1 {
 }
 
 .feather-zap-off {
-  opacity: 0;
+  display: none;
   color: red;
-  width: 1.5em;
-  height: 1.5em;
+  width: 0.75em;
+  height: 0.75em;
   filter: drop-shadow(0.1rem 0.1rem 0.15rem rgba(0, 0, 0, 0.5));
-  margin: -4.5em 0 -1em;
-  transition: all 0.5s;
+  margin-top: 1em;
 }
 
 #toggle {
