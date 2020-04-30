@@ -13,7 +13,7 @@ function initSettings() {
 
 initSettings();
 
-function getCronTime() {
+function getCronTimeInternal() {
   let days = '';
   settings.get('days').forEach((d, i) => {
     if (d) {
@@ -24,18 +24,47 @@ function getCronTime() {
 
   const splitTime = settings.get('time').split(':');
   const hour = splitTime[0] || 8;
-  const min = splitTime[1] || 30;
+  const minute = splitTime[1] || 30;
 
   if (splitTime.length < 2) {
     console.error('Broken time, using defaults', splitTime, settings.get('time'));
   }
 
-  const cron = `0 ${min} ${hour} * * ${days}`;
+  return { hour, minute, days };
+}
+
+function getCronTimeOn() {
+  const { hour, minute, days } = getCronTimeInternal();
+
+  const cron = `0 ${minute} ${hour} * * ${days}`;
   // console.log('CronTime', cron);
   return cron;
 }
 
+// This is not very reliable in a lot of scenarios, making lots of assumptions like not wrapping days, dst, etc
+function getCronTimeOff() {
+  const { hour, minute, days } = getCronTimeInternal();
+
+  // Turn off 15 minutes after max brightness
+  const delay = 15;
+  const offset = settings.get('duration') / 60000 + delay;
+
+  // Find seconds of different values so that we can do time-based math
+  const secondsTime = hour * 3600 + minute * 60;
+  const secondsOffset = offset * 60;
+  const finalSeconds = secondsTime + secondsOffset;
+
+  // Figure out the actual hours/minutes for cron
+  const finalHour = Math.floor(finalSeconds / 3600);
+  const finalMinute = (finalSeconds - 3600 * finalHour) / 60;
+
+  const cron = `0 ${finalMinute} ${finalHour} * * ${days}`;
+  // console.log('CronTime', cron, secondsTime, secondsOffset, finalSeconds, finalHour, finalMinute, hour, minute);
+  return cron;
+}
+
 module.exports = {
-  getCronTime,
+  getCronTimeOn,
+  getCronTimeOff,
   settings,
 };
